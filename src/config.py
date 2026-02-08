@@ -14,7 +14,7 @@ DMAX = 5000
 # ----------------------
 # Training settings
 # ----------------------
-N_TRIALS = 1
+N_TRIALS = 50
 MLFLOW = True
 SEED = 42
 
