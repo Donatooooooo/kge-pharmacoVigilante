@@ -1,4 +1,6 @@
-models/
+data/graph
+data/processed
+data/raw
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

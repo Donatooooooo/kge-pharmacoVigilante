@@ -1,11 +1,18 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
 [project]
-name = "ml-pykeen-template"
+name = "src"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "mlflow>=1.27.0",
+    "pandas>=3.0.0",
     "pykeen>=1.11.1",
+    "ruff>=0.15.0",
     "torch==2.7.0+cu118",
     "torchaudio==2.7.0+cu118",
     "torchvision==0.22.0+cu118",
@@ -20,3 +27,19 @@ explicit = true
 torch = [{ index = "pytorch-cu118" }]
 torchaudio = [{ index = "pytorch-cu118" }]
 torchvision = [{ index = "pytorch-cu118" }]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.11.0",
+]
+
+[tool.ruff]
+line-length = 99
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = ["E", "F", "I", "UP", "B", "SIM"]  # Import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+force-sort-within-sections = true
