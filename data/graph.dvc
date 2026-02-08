@@ -1,0 +1,6 @@
+outs:
+- md5: 70862663c6108812c0e0812ad04196de.dir
+  size: 226091328
+  nfiles: 4
+  hash: md5
+  path: graph

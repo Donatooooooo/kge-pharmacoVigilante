@@ -38,16 +38,14 @@ Predire gli effetti collaterali dei farmaci utilizzando embeddings appresi da un
 
 Generazione delle triple dal dataset `processed_medicine.csv`, utilizzando le seguenti relazioni:
 
-| Relazione                  | Soggetto          | Oggetto               |
-|----------------------------|-------------------|-----------------------|
-| `has_form`                 | farmaco           | forma farmaceutica    |
-| `contains`                 | farmaco           | quantità confezione   |
-| `of`                       | quantità          | forma farmaceutica    |
-| `composed_by`              | farmaco           | principio attivo      |
-| `has_quantity`             | principio attivo  | dosaggio              |
-| `contains_active_quantity` | farmaco           | dosaggio              |
-| `has_therapeutic_class`    | farmaco           | classe terapeutica    |
-| `has_substitute`           | farmaco           | farmaco sostitutivo   |
+| Relazione                    | Soggetto          | Oggetto                          |
+|------------------------------|-------------------|----------------------------------|
+| `has_form`                   | farmaco           | forma farmaceutica               |
+| `has_route`                  | farmaco           | via di somministrazione          |
+| `composed_by`                | farmaco           | principio attivo                 |
+| `composed_by_at_dose`        | farmaco           | principio attivo + dosaggio      |
+| `has_therapeutic_class`      | farmaco           | classe terapeutica               |
+| `has_substitute`             | farmaco           | farmaco sostitutivo              |
 
 > **Nota:** gli effetti collaterali NON sono inseriti nel grafo. Sono usati solo come label per il task downstream.
 
