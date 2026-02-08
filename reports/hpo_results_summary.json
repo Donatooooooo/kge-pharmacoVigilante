@@ -1,0 +1,48 @@
+{
+    "best_model": "ComplEx",
+    "best_score": 0.17532360553741455,
+    "best_params": {
+        "model.embedding_dim": 160,
+        "regularizer.weight": 1.5746304787848515e-05,
+        "optimizer.lr": 0.0027604670724791693,
+        "lr_scheduler.gamma": 0.9582513062967009,
+        "negative_sampler.num_negs_per_pos": 2
+    },
+    "all_models": {
+        "TransE": {
+            "best_score": 0.12298142164945602,
+            "best_params": {
+                "model.embedding_dim": 64,
+                "model.scoring_fct_norm": 1,
+                "loss.margin": 0.7399787997921743,
+                "optimizer.lr": 0.005194097723892713,
+                "lr_scheduler.gamma": 0.9480680660116219,
+                "negative_sampler.num_negs_per_pos": 1
+            },
+            "n_trials": 1
+        },
+        "ComplEx": {
+            "best_score": 0.17532360553741455,
+            "best_params": {
+                "model.embedding_dim": 160,
+                "regularizer.weight": 1.5746304787848515e-05,
+                "optimizer.lr": 0.0027604670724791693,
+                "lr_scheduler.gamma": 0.9582513062967009,
+                "negative_sampler.num_negs_per_pos": 2
+            },
+            "n_trials": 1
+        },
+        "RotatE": {
+            "best_score": 0.045682504773139954,
+            "best_params": {
+                "model.embedding_dim": 192,
+                "loss.margin": 21.659572388154693,
+                "loss.adversarial_temperature": 1.0489496348894312,
+                "optimizer.lr": 0.00048112098298829496,
+                "lr_scheduler.gamma": 0.977546775933694,
+                "negative_sampler.num_negs_per_pos": 1
+            },
+            "n_trials": 1
+        }
+    }
+}

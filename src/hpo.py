@@ -1,11 +1,15 @@
+import pandas as pd
+from pathlib import Path
+from pykeen.hpo import hpo_pipeline
+from pykeen.utils import set_random_seed
+
+from pykeen.triples import TriplesFactory
+import torch, json, mlflow, os
+
 import logging, warnings
 warnings.filterwarnings("ignore")
-logging.getLogger('pykeen').setLevel(logging.WARNING)
+logging.getLogger('pykeen').setLevel(logging.ERROR)
 
-import pandas as pd
-from pykeen.hpo import hpo_pipeline
-from pykeen.triples import TriplesFactory
-import torch, json
 
 from config import (
     HPO_COMPLEX_DIR,
@@ -13,9 +17,10 @@ from config import (
     HPO_ROTATE_DIR,
     HPO_TRANSE_DIR,
     TRIPLES_TSV,
-    N_TRIALS
+    N_TRIALS,
+    SEED,
+    MLFLOW,
 )
-
 
 class HpoPipeline:
     def __init__(self, tsv_path):
@@ -42,7 +47,6 @@ class HpoPipeline:
             encoding="utf-16",
         )
         data = data.fillna("").astype(str)
-        print(data["relation"].unique())
         print(f"- Loaded {len(data)} triples")
         print(f"   ├─ Entities: {len(set(data['subject'].tolist() + data['object'].tolist()))}")
         print(f"   └─ Relations: {len(data['relation'].unique())}")
@@ -64,7 +68,7 @@ class HpoPipeline:
             "training": self.training,
             "testing": self.testing,
             "validation": self.validation,
-            "negative_sampler": "basic",
+            "negative_sampler": "bernoulli",
             "n_trials":  N_TRIALS,
             "save_model_directory": str(HPO_TRANSE_DIR),
             "loss": "MarginRankingLoss",
@@ -80,7 +84,7 @@ class HpoPipeline:
                 relation_initializer="xavier_uniform_",
             ),
             "model_kwargs_ranges": dict(
-                embedding_dim=dict(type=int, low=32, high=128, q=32),
+                embedding_dim=dict(type=int, low=32, high=256, q=32),
                 scoring_fct_norm=dict(type=int, low=1, high=2),
             ),
             "optimizer": "Adam",
@@ -105,7 +109,7 @@ class HpoPipeline:
             "training": self.training,
             "testing": self.testing,
             "validation": self.validation,
-            "negative_sampler": "basic",
+            "negative_sampler": "bernoulli",
             "n_trials":  N_TRIALS,
             "save_model_directory": str(HPO_COMPLEX_DIR),
             "loss": "SoftplusLoss",
@@ -118,10 +122,10 @@ class HpoPipeline:
                 relation_initializer="xavier_uniform_",
             ),
             "model_kwargs_ranges": dict(
-                embedding_dim=dict(type=int, low=32, high=128, q=32),
+                embedding_dim=dict(type=int, low=32, high=256, q=32),
             ),
             "regularizer": "LpRegularizer",
-            "regularizer_kwargs": dict(p=2.0),
+            "regularizer_kwargs": dict(p=3.0),
             "regularizer_kwargs_ranges": dict(
                 weight=dict(type=float, low=1e-5, high=1e-3, log=True),
             ),
@@ -147,7 +151,7 @@ class HpoPipeline:
             "training": self.training,
             "testing": self.testing,
             "validation": self.validation,
-            "negative_sampler": "basic",
+            "negative_sampler": "bernoulli",
             "n_trials":  N_TRIALS,
             "save_model_directory": str(HPO_ROTATE_DIR),
             "loss": "NSSALoss",
@@ -159,8 +163,12 @@ class HpoPipeline:
             "lr_scheduler_kwargs_ranges": dict(
                 gamma=dict(type=float, low=0.93, high=0.99),
             ),
+            "model_kwargs": dict(
+                entity_initializer="xavier_uniform_",
+                relation_initializer="init_phases",
+            ),
             "model_kwargs_ranges": dict(
-                embedding_dim=dict(type=int, low=32, high=128, q=32),
+                embedding_dim=dict(type=int, low=32, high=256, q=32),
             ),
             "optimizer": "Adam",
             "optimizer_kwargs_ranges": dict(
@@ -178,24 +186,59 @@ class HpoPipeline:
             "device": self.device,
         }
 
+    def _log_to_mlflow(self, model_name, result, save_model_dir):
+        triples_stem = Path(self.tsv_path).stem
+        exp = f"{model_name}_{triples_stem}"
+        best_trial = result.study.best_trial
+
+        if not mlflow.get_experiment_by_name(exp):
+            mlflow.create_experiment(exp)
+        mlflow.set_experiment(exp)
+
+        with mlflow.start_run():
+            mlflow.set_tag("n_trials", len(result.study.trials))
+            mlflow.set_tag("best_trial", best_trial.number)
+
+            # Best hyperparameters
+            for key, value in best_trial.params.items():
+                mlflow.log_param(key, value)
+
+            # Metriche dal best trial
+            mlflow.log_metric("best_score", best_trial.value)
+            for key, value in best_trial.user_attrs.items():
+                if "hits" or "rank" in key:
+                    if "realistic" in key:
+                        if isinstance(value, (int, float)):
+                            mlflow.log_metric(key, value)
+
+            # Results artifact
+            results_json = Path(save_model_dir) / str(best_trial.number) / "results.json"
+            if results_json.exists():
+                mlflow.log_artifact(str(results_json))
+
+
     def run_hpo(self):
 
         self.create_dataset(
-            train_ratio = 0.7, 
-            test_ratio = 0.2, 
+            train_ratio = 0.7,
+            test_ratio = 0.2,
             val_ratio = 0.1
         )
 
         # Searching Block
         results = {}
-        print("\n- [HPO] TransE")
-        results["TransE"] = hpo_pipeline(**self.get_transe_hpo_config())
+        configs = {
+            "TransE": (self.get_transe_hpo_config, HPO_TRANSE_DIR),
+            "ComplEx": (self.get_complex_hpo_config, HPO_COMPLEX_DIR),
+            "RotatE": (self.get_rotate_hpo_config, HPO_ROTATE_DIR),
+        }
 
-        print("\n- [HPO] ComplEx")
-        results["ComplEx"] = hpo_pipeline(**self.get_complex_hpo_config())
-
-        print("\n- [HPO] RotatE")
-        results["RotatE"] = hpo_pipeline(**self.get_rotate_hpo_config())
+        for model_name, (get_config, save_dir) in configs.items():
+            print(f"\n- [HPO] {model_name}")
+            result = hpo_pipeline(**get_config())
+            results[model_name] = result
+            if MLFLOW:
+                self._log_to_mlflow(model_name, result, save_dir)
 
 
         # Decision Block
@@ -235,5 +278,10 @@ class HpoPipeline:
 
 
 if __name__ == "__main__":
+    set_random_seed(SEED)
+    
+    if MLFLOW:
+        mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
+
     graph = str(TRIPLES_TSV)
     hpo = HpoPipeline(graph).run_hpo()
