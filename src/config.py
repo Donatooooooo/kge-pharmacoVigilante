@@ -25,6 +25,7 @@ JACCARD_THRESHOLD = 0.5
 # Training settings
 # ----------------------
 TARGET_RELATION = "has_side_effect"
+N_TRIALS = 50
 MLFLOW = True
 SEED = 42
 
