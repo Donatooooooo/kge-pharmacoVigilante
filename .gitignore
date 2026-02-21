@@ -1,8 +1,14 @@
 data/graph
 data/processed
 data/raw
+data/interim
+data/embeddings
 
-models/*
+models/learned_kge
+models/learned_kge_se
+models/rotate
+models/umls
+models/xgboost
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

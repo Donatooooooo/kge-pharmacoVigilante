@@ -1,0 +1,468 @@
+================================================================================
+ UMLS + JACCARD LABEL NORMALIZATION REPORT
+================================================================================
+
+SUMMARY
+--------------------------------------------------------------------------------
+  Original labels:     318
+  Final labels:        292
+  Reduction:           8.2%
+  Merged groups:       25
+  - via UMLS:          23
+  - via Jaccard:       3
+  Unmapped labels:     36
+  Total support:       701,614
+
+================================================================================
+ JACCARD MATCHES (2)
+================================================================================
+  burning sensation at the site of application
+    -> application site burning
+  pain behind eyes
+    -> eye pain
+
+================================================================================
+ MERGED CLUSTERS (25 groups)
+================================================================================
+
+  abdomen distended
+    <- abdominal bloating
+    <- bloating
+
+  abdominal pain
+    <- abdominal pain
+    <- stomach pain
+
+  agitation
+    <- agitation
+    <- restlessness
+
+  agranulocytosis
+    <- agranulocytosis
+    <- granulocytopenia
+
+  application site burning
+    <- application site burning
+    <- burning sensation at the site of application [jaccard]
+
+  drowsiness
+    <- drowsiness
+    <- sleepiness
+
+  dyspepsia
+    <- dyspepsia
+    <- indigestion
+
+  edema
+    <- edema
+    <- swelling
+
+  erectile dysfunction
+    <- erectile dysfunction
+    <- impotence
+
+  exanthema
+    <- rash
+    <- skin rash
+
+  eye pain
+    <- eye pain
+    <- pain behind eyes [jaccard]
+
+  fatigue
+    <- fatigue
+    <- tiredness
+
+  hot flushes
+    <- hot flashes
+    <- hot flushes
+
+  hypersensitivity
+    <- allergic reaction
+    <- hypersensitivity
+
+  hypotension
+    <- decreased blood pressure
+    <- hypotension
+
+  injection site reaction
+    <- injection site reaction
+    <- injection site reactions
+
+  oral ulcer
+    <- mouth sore
+    <- oral ulcer
+
+  pain in limb
+    <- limb pain
+    <- pain in extremities
+
+  paresthesia
+    <- paresthesia
+    <- tingling
+
+  pharyngitis
+    <- pharyngitis
+    <- sore throat
+
+  seizures
+    <- convulsion
+    <- seizure
+
+  sinusitis
+    <- sinus infection
+    <- sinus inflammation
+
+  tachycardia
+    <- fast heart rate
+    <- increased heart rate
+    <- tachycardia
+
+  upset stomach
+    <- stomach discomfort
+    <- upset stomach
+
+  urticaria
+    <- hives
+    <- urticaria
+
+================================================================================
+ UNMAPPED LABELS (36)
+================================================================================
+  decreased sodium level in blood                    score=0.848
+  decreased blood cells                              score=0.845
+  eye discomfort                                     score=0.835
+  stiffness                                          score=0.827
+  increased blood lipid level                        score=0.817
+  difficulty in paying attention                     score=0.814
+  abnormality of voluntary movements                 score=0.807
+  application site redness                           score=0.804
+  stomach pain epigastric pain                       score=0.802
+  inflammation of the nose                           score=0.782
+  nasal discomfort                                   score=0.778
+  application site reactions                         score=0.776
+  abnormal menstrual bleeding                        score=0.773
+  increased saliva production                        score=0.762
+  uncoordinated body movements                       score=0.759
+  anorgasmia in women                                score=0.755
+  increased glucose level in blood                   score=0.753
+  frequent urge to urinate                           score=0.753
+  decreased magnesium level in blood                 score=0.745
+  decreased potassium level in blood                 score=0.745
+  blisters on skin                                   score=0.739
+  taste change                                       score=0.737
+  increased potassium level in blood                 score=0.729
+  increased prolactin level in blood                 score=0.728
+  fungal infection of oropharynx                     score=0.716
+  increased risk of infection                        score=0.712
+  reduction in bone density                          score=0.701
+  altered blood lipid level                          score=0.000
+  breast tenderness in male                          score=0.000
+  changes in serum aminotransferase levels           score=0.000
+  gout flares                                        score=0.000
+  influenza like syndrome                            score=0.000
+  muscle coordination impaired                       score=0.000
+  numbness of extremity                              score=0.000
+  red spots or bumps                                 score=0.000
+  stinging in the eyes                               score=0.000
+
+================================================================================
+ FINAL LABELS (292)
+================================================================================
+Label                                                     Merged      Support
+--------------------------------------------------------------------------------
+nausea                                                                 75,519
+diarrhea                                                               57,703
+headache                                                               46,877
+vomiting                                                               41,363
+abdominal pain                                               [2]       38,430
+dizziness                                                              32,691
+exanthema                                                    [2]       22,539
+drowsiness                                                   [2]       17,386
+fatigue                                                      [2]       17,247
+dyspepsia                                                    [2]       15,511
+constipation                                                           14,336
+flatulence                                                              9,806
+xerostomia                                                              9,134
+weight gain                                                             8,849
+injection site reaction                                      [2]        7,642
+elevated liver enzymes                                                  7,227
+coughing                                                                5,998
+blurred vision                                                          5,981
+nasopharyngitis                                                         5,774
+arthralgia                                                              5,756
+pruritus                                                                5,751
+hypersensitivity                                             [2]        5,631
+sleeplessness                                                           5,263
+tremor                                                                  5,225
+asthenia                                                                5,193
+edema                                                        [2]        5,023
+liver function tests abnormal finding                                   4,873
+upset stomach                                                [2]        4,435
+anorexia                                                                4,371
+upper respiratory infections                                            3,985
+hypotension                                                  [2]        3,880
+pain in limb                                                 [2]        3,657
+agitation                                                    [2]        3,492
+fever                                                                   3,055
+application site reactions                                              2,898
+mental depression                                                       2,827
+anemia                                                                  2,689
+hypotension, orthostatic                                                2,673
+increased appetite (finding)                                            2,667
+myalgia                                                                 2,620
+alopecia                                                                2,591
+pharyngitis                                                  [2]        2,570
+decrease in appetite                                                    2,458
+common cold                                                             2,434
+menstruation disturbances                                               2,367
+increased sweating                                                      2,309
+flushing                                                                2,295
+frequent urge to urinate                                                2,238
+nervousness                                                             2,236
+hypoglycemia                                                            2,203
+urinary tract infection                                                 2,132
+communicable diseases                                                   2,105
+allergy specialty                                                       2,061
+cushing syndrome                                                        2,025
+behavioral change                                                       2,009
+back pain                                                               2,003
+dry skin                                                                1,993
+peeling of skin                                                         1,991
+blood urea increased                                                    1,936
+taste change                                                            1,924
+abnormal hair growth                                                    1,910
+obesity                                                                 1,910
+white blood cell count decreased                                        1,895
+erectile dysfunction                                         [2]        1,889
+hot flushes                                                  [2]        1,885
+palpitations                                                            1,837
+sedated state                                                           1,801
+hypertensive disease                                                    1,780
+late ejaculation                                                        1,771
+abdomen distended                                            [2]        1,742
+vertigo                                                                 1,727
+abnormality of voluntary movements                                      1,715
+dyspnea                                                                 1,678
+weight loss                                                             1,643
+acne vulgaris                                                           1,595
+bradycardia                                                             1,594
+decreased libido                                                        1,575
+confusion                                                               1,561
+increased prolactin level in blood                                      1,561
+abnormal coordination                                                   1,542
+increased risk of infection                                             1,525
+reduction in bone density                                               1,518
+mood swings                                                             1,515
+urticaria                                                    [2]        1,504
+tachycardia                                                  [3]        1,468
+blood platelets                                                         1,428
+burning sensation                                                       1,367
+nasal congestion (finding)                                              1,361
+injection site pain                                                     1,352
+hypertrophy of breast                                                   1,291
+sinusitis                                                    [2]        1,255
+lightheadedness                                                         1,251
+sweating                                                                1,238
+influenza-like symptoms                                                 1,227
+anxiety                                                                 1,215
+eye discomfort                                                          1,177
+paresthesia                                                  [2]        1,168
+thin skin                                                               1,141
+gastrointestinal diseases                                               1,123
+libido                                                                  1,109
+diplopia                                                                1,090
+slurred speech                                                          1,040
+stinging sensation                                                      1,023
+irritation (finding)                                                    1,021
+aggressive behavior                                                     1,015
+muscular stiffness                                                      1,012
+hemorrhage                                                                983
+oral ulcer                                                   [2]          967
+eye irritation                                                            963
+eye pain                                                     [2]          958
+blisters on skin                                                          954
+thrombophlebitis                                                          949
+epistaxis                                                                 947
+heartburn                                                                 944
+erythema                                                                  935
+memory impairment                                                         933
+musculoskeletal pain                                                      870
+parkinsonian disorders                                                    844
+stomatitis                                                                842
+akathisia                                                                 810
+paresis                                                                   798
+cardiac arrhythmia                                                        795
+stomach pain epigastric pain                                              792
+application site burning                                     [2]          765
+application site redness                                                  716
+decreased blood cells                                                     710
+rhinorrhea                                                                708
+adrenal gland hypofunction                                                704
+peripheral edema                                                          677
+bronchospasm                                                              676
+esophagitis                                                               676
+anorgasmia in women                                                       671
+virus diseases                                                            669
+application site irritation                                               665
+abdominal cramps                                                          643
+increased potassium level in blood                                        636
+speech disorders                                                          629
+dyslipidemias                                                             625
+muscle cramp                                                              613
+visual disturbance                                                        612
+burning sensation in eye                                                  587
+low vision                                                                583
+itching of eye                                                            577
+kidney damage                                                             575
+increased glucose level in blood                                          552
+extrapyramidal sign                                                       549
+syncope                                                                   544
+difficulty in paying attention                                            531
+dry eye syndromes                                                         525
+skin irritation                                                           514
+gout flares                                                               505
+altered libido                                                            504
+chills                                                                    499
+nystagmus                                                                 488
+increased thirst                                                          487
+cold extremity                                                            472
+hypesthesia                                                               450
+equilibration disorder                                                    446
+urination disorders                                                       435
+abnormal digestive tract function                                         434
+peripheral neuropathy                                                     434
+seizures                                                     [2]          432
+mastodynia                                                                422
+bone pain                                                                 408
+eye burns                                                                 403
+polyuria                                                                  403
+liver enzymes abnormal                                                    400
+tinnitus                                                                  399
+spasm                                                                     397
+amnesia                                                                   393
+pain                                                                      386
+dystonia                                                                  380
+stiffness                                                                 378
+difficulty passing urine                                                  371
+muscle coordination impaired                                              368
+urinary incontinence                                                      362
+decreased sodium level in blood                                           360
+white blood cell count increased (lab result)                             359
+bronchitis                                                                356
+hallucinations                                                            354
+disorder of ejaculation                                                   353
+urinary retention                                                         347
+cycloplegia                                                               344
+atrioventricular block                                                    338
+electrocardiogram abnormal (finding)                                      337
+abnormal menstrual bleeding                                               335
+red spots or bumps                                                        331
+bulla                                                                     329
+vaginal spotting                                                          325
+dream disorder                                                            319
+increased saliva production                                               317
+breast tenderness                                                         315
+liver damage                                                              312
+stomach cramps (finding)                                                  308
+vaginal discharge                                                         305
+thromboembolism                                                           304
+maculopapular lesion                                                      302
+irritable mood                                                            299
+taste, metallic                                                           292
+body fluid retention                                                      283
+dry cough                                                                 282
+excessive tearing                                                         282
+clostridium difficile colitis                                             280
+yawning                                                                   279
+influenza like syndrome                                                   279
+chest pain                                                                270
+gait abnormality                                                          267
+photophobia                                                               267
+raynaud phenomenon                                                        267
+migraine disorders                                                        266
+sexual dysfunction                                                        266
+abdominal discomfort                                                      265
+dermatitis                                                                264
+nasal discomfort                                                          264
+dehydration                                                               262
+genital fungal infection                                                  261
+swelling at injection site                                                258
+gastrointestinal discomfort                                               255
+hematuria                                                                 251
+hepatitis                                                                 247
+dermatitis, atopic                                                        246
+paranasal sinus disorder                                                  246
+ascites                                                                   243
+hypertrichosis                                                            240
+nail diseases                                                             237
+irritation of nose                                                        228
+hypercholesterolemia                                                      219
+foreign body sensation in eyes                                            218
+decreased potassium level in blood                                        217
+atrophic condition of skin                                                216
+telangiectasis                                                            216
+upper abdominal pain                                                      212
+breast discomfort                                                         208
+bitter                                                                    206
+nasal mucosa dry                                                          206
+inflammation of the nose                                                  195
+redness of eye                                                            194
+sleep disorders                                                           186
+drooling                                                                  183
+uncoordinated body movements                                              181
+photosensitivity of skin                                                  177
+gynecomastia                                                              175
+hoarseness                                                                172
+stinging in the eyes                                                      167
+ovarian enlargement                                                       160
+wheezing                                                                  156
+raised intraocular pressure (finding)                                     148
+stevens-johnson syndrome                                                  147
+toxic epidermal necrolysis                                                147
+urine discoloration                                                       131
+respiratory tract infections                                              130
+anemia, hemolytic                                                         129
+contusions                                                                123
+icterus                                                                   122
+ocular hyperemia                                                          114
+conjunctivitis                                                            113
+vaginitis                                                                 113
+abnormal breathing                                                        111
+increased bleeding tendency                                               108
+change in voice (finding)                                                 107
+vaginal burning sensation                                                 105
+dryness (characteristic)                                                   97
+erythema multiforme                                                        95
+nasal inflammation                                                         89
+increased uric acid level                                                  86
+gastrointestinal hemorrhage                                                82
+ankle edema (finding)                                                      74
+fungal infection of oropharynx                                             64
+pharyngeal dryness                                                         59
+agranulocytosis                                              [2]           58
+decreased magnesium level in blood                                         56
+breast tenderness in male                                                  50
+electrolyte imbalance                                                      43
+skin ulcer                                                                 36
+excitement emotion                                                         35
+hyperactive behavior                                                       35
+otitis media                                                               33
+nightmares                                                                 30
+altered blood lipid level                                                  23
+lymphadenopathy                                                            21
+numbness of extremity                                                      15
+increased blood lipid level                                                12
+changes in serum aminotransferase levels                                   11
+unable to concentrate                                                       8
+blood urate raised                                                          7
+glucose intolerance (disease)                                               5
+urine color dark                                                            3
+asthma                                                                      1
+edema of foot (finding)                                                     1
+psychotic disorders                                                         1
+gastritis                                                                   1
+swelling of hands (finding)                                                 1
+--------------------------------------------------------------------------------
+TOTAL                                                                 701,614
+================================================================================

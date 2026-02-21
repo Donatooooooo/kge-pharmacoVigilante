@@ -1,21 +1,20 @@
 from collections import defaultdict
-import re
 
 import pandas as pd
-import tqdm
+from tqdm.auto import tqdm
 
-from src.config import DMAX, PROCESSED_MEDICINE_CSV, TRIPLES_TSV
-from src.data.patterns import CATEGORIES, get_drug_form, get_drug_quantities
-
-
-COMPOSITION_PATTERN = re.compile(r"^(.*?)\s*\((.*?)\)$")
-DOSE_CLEANUP_PATTERN = re.compile(r"/[a-zA-Z%]+")
-DOSE_EXTRACT_PATTERN = re.compile(r"(\d+(?:\.\d+)?)([a-zA-Z%]*)")
-CLEANUP_PATTERN = re.compile(r"[\/\\\s\d%]+")
+from src.config import (
+    DMAX,
+    INCLUDE_SIDE_EFFECTS,
+    PROCESSED_MEDICINE_CSV,
+    SEED,
+    SIDE_EFFETCS_MEDICINE_CSV,
+    TRIPLES_TSV,
+)
+from src.data.patterns import *
 
 
 def get_route(form):
-    """Get administration route from drug form using CATEGORIES."""
     if not form:
         return None
     for route, forms in CATEGORIES.items():
@@ -25,7 +24,6 @@ def get_route(form):
 
 
 def process_drug(drug):
-    """Extract drug name and form, removing quantities."""
     drug = drug.lower()
     form = get_drug_form(drug)
     quantities = get_drug_quantities(drug)
@@ -43,7 +41,6 @@ def process_drug(drug):
 
 
 def process_composition(cmp):
-    """Parse composition string into name and doses."""
     if not pd.notna(cmp) or not cmp:
         return None, []
 
@@ -59,9 +56,7 @@ def process_composition(cmp):
     return name.strip(), doses
 
 
-def generate_triples(row, substitute_cols):
-    """Generate all triples for a single row.
-    Returns (triples, drug_name, ingredients_set)."""
+def generate_triples(row, substitute_cols, use_cols):
     triples = set()
     ingredients = set()
 
@@ -71,7 +66,7 @@ def generate_triples(row, substitute_cols):
     if form:
         triples.add(f"{drug}\thas_form\t{form}")
 
-    # Route triple (from CATEGORIES mapping)
+    # Route triple
     route = get_route(form)
     if route:
         triples.add(f"{drug}\thas_route\t{route}")
@@ -84,13 +79,21 @@ def generate_triples(row, substitute_cols):
             ingredients.add(composition)
             for dose in doses:
                 composite = f"{composition}_{dose}"
-                triples.add(f"{drug}\tcomposed_by_at_dose\t{composite}")
+                triples.add(f"{drug}\thas_dose_of\t{composite}")
 
     # Therapeutic class
     therapeutic_class = row.get("Therapeutic Class")
     if pd.notna(therapeutic_class):
         tc_normalized = therapeutic_class.lower().replace(" ", "_").strip()
         triples.add(f"{drug}\thas_therapeutic_class\t{tc_normalized}")
+
+    # Uses
+    for col in use_cols:
+        use_val = row.get(col)
+        if pd.notna(use_val) and use_val:
+            for _, condition in normalize_use(use_val):
+                condition_normalized = condition.replace(" ", "_").strip()
+                triples.add(f"{drug}\thas_use\t{condition_normalized}")
 
     # Substitutes
     for col in substitute_cols:
@@ -99,42 +102,68 @@ def generate_triples(row, substitute_cols):
             sub_drug, _ = process_drug(substitute)
             triples.add(f"{drug}\thas_substitute\t{sub_drug}")
 
+    # Chemical class
+    chemical_class = row.get("Chemical Class")
+    if pd.notna(chemical_class):
+        triples.add(f"{drug}\thas_chemical_class\t{chemical_class}")
+
     return triples, drug, ingredients
 
 
-def main():
+def generate_side_effect_triples(drug, side_effects_row, se_cols):
+    triples = set()
+    for col in se_cols:
+        se = side_effects_row.get(col)
+        if pd.notna(se) and se:
+            se_normalized = str(se).lower().replace(" ", "_").strip()
+            triples.add(f"{drug}\thas_side_effect\t{se_normalized}")
+    return triples
+
+
+def build_graph():
     dataset = pd.read_csv(PROCESSED_MEDICINE_CSV)
+    dataset = dataset.sample(frac=1, random_state=SEED).reset_index(drop=True)
 
-    # Pre-identify substitute columns once
-    substitute_cols = [col for col in dataset.columns if col.startswith("substitute")]
+    if INCLUDE_SIDE_EFFECTS:
+        side_effects = pd.read_csv(SIDE_EFFETCS_MEDICINE_CSV)
+        se_cols = [col for col in side_effects.columns if col.startswith("sideEffect")]
+        dataset = dataset.merge(side_effects, on="name", how="left")
 
-    # Build index for fast substitute lookups
+    substitute_cols = [col for col in dataset.columns if col.startswith("substitute0")]
+    use_cols = [col for col in dataset.columns if col.startswith("use0")]
     name_to_idx = dataset.groupby("name").groups
 
     all_triples = set()
-    # ingredient -> set of drugs (for shares_active_ingredient)
     ingredient_to_drugs = defaultdict(set)
 
-    for idx, row in tqdm.tqdm(dataset.iterrows()):
+    for idx, row in tqdm(dataset.iterrows(), total=DMAX, desc="Building triples"):
         try:
-            # Process principal medicine
-            triples, drug, ingredients = generate_triples(row, substitute_cols)
+            # Process principal drugs
+            triples, drug, ingredients = generate_triples(row, substitute_cols, use_cols)
             all_triples.update(triples)
             for ing in ingredients:
                 ingredient_to_drugs[ing].add(drug)
 
-            # Process substitute medicines
+            if INCLUDE_SIDE_EFFECTS:
+                all_triples.update(generate_side_effect_triples(drug, row, se_cols))
+
+            # Process substitute drugs
             for col in substitute_cols:
                 substitute = row.get(col)
                 if pd.notna(substitute) and substitute in name_to_idx:
                     sub_idx = name_to_idx[substitute][0]
                     sub_row = dataset.loc[sub_idx]
                     sub_triples, sub_drug, sub_ingredients = generate_triples(
-                        sub_row, substitute_cols
+                        sub_row, substitute_cols, use_cols
                     )
                     all_triples.update(sub_triples)
                     for ing in sub_ingredients:
                         ingredient_to_drugs[ing].add(sub_drug)
+
+                    if INCLUDE_SIDE_EFFECTS:
+                        all_triples.update(
+                            generate_side_effect_triples(sub_drug, sub_row, se_cols)
+                        )
 
             if DMAX != 0 and idx == DMAX:
                 break
@@ -142,26 +171,21 @@ def main():
         except Exception as e:
             print(f"Error at row {idx}: {e}")
 
-    unique_triples = all_triples
+    triples = sorted(all_triples)
+    relation_counts = defaultdict(int)
+    for t in triples:
+        relation = t.split("\t")[1]
+        relation_counts[relation] += 1
 
-    print(f"- Generated {len(unique_triples)} unique triples")
-
-    # Count relations
-    relations = {}
-    for triple in unique_triples:
-        parts = triple.split("\t")
-        if len(parts) >= 2:
-            rel = parts[1]
-            relations[rel] = relations.get(rel, 0) + 1
-
-    print("\nRelations summary:")
-    for rel, count in sorted(relations.items(), key=lambda x: -x[1]):
-        print(f"    {rel}: {count}")
+    total = len(triples)
+    print(f"\n{'Relation':<30} {'Count':>8} {'%':>8}")
+    for rel, count in sorted(relation_counts.items(), key=lambda x: -x[1]):
+        print(f"{rel:<30} {count:>8} {count / total * 100:>7.2f}%")
 
     with open(TRIPLES_TSV, "w", encoding="utf-16") as f:
-        for triple in unique_triples:
-            f.write(triple.replace("  ", "").replace(" ", "") + "\n")
+        for triple in sorted(triples):
+            f.write(triple.replace("  ", "").replace(" ", "").replace("-", "") + "\n")
 
 
 if __name__ == "__main__":
-    main()
+    build_graph()
