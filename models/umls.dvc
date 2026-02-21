@@ -1,0 +1,6 @@
+outs:
+- md5: e1e9c49bcef9ec4a93330bc712b5d0ed.dir
+  size: 36614
+  nfiles: 1
+  hash: md5
+  path: umls

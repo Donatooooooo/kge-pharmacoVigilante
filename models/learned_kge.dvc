@@ -1,0 +1,6 @@
+outs:
+- md5: c99f8d648b836fe189aa5d381723f4c1.dir
+  size: 104525152
+  nfiles: 7
+  hash: md5
+  path: learned_kge
