@@ -8,8 +8,7 @@ from pykeen.triples import TriplesFactory
 from sklearn.model_selection import train_test_split
 import torch
 
-from config import (
-    MODEL_SE,
+from src.config import (
     MODELS_DIR,
     PARAMS,
     SEED,
@@ -160,5 +159,3 @@ class LinkPredictor:
         self.results.save_to_directory(str(MODELS_DIR / p["save_dir"]))
         return self.results
 
-    def load_model(self):
-        self.model = torch.load(str(MODEL_SE), weights_only=False)
