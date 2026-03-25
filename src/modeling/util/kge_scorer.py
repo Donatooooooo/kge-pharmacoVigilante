@@ -1,5 +1,3 @@
-"""Score drug-SE pairs using a trained KGE_SE model."""
-
 import gzip
 
 import numpy as np
@@ -10,7 +8,6 @@ from src.graph.embeddings import drug_name_to_entity
 
 
 def _load_entity_mapping(mapping_dir):
-    """Load entity_to_id and relation_to_id from saved training_triples."""
     entity_to_id = {}
     with gzip.open(str(mapping_dir / "entity_to_id.tsv.gz"), "rt", encoding="utf-8") as f:
         next(f, None)
@@ -31,18 +28,9 @@ def _load_entity_mapping(mapping_dir):
 
 
 def score_all_pairs(drug_names, se_names, batch_size=512):
-    """
-    Score all (drug, has_side_effect, SE) pairs using the KGE_SE model.
-
-    Returns:
-        scores: np.ndarray of shape (n_drugs, n_se) with KGE scores.
-                Unmatched entities get -inf (worst possible rank).
-    """
-    # Load model
     model = torch.load(str(MODEL_SE), weights_only=False).eval()
     device = next(model.parameters()).device
 
-    # Load entity/relation mappings from saved training triples
     mapping_dir = MODEL_SE.parent / "training_triples"
     entity_to_id, relation_to_id = _load_entity_mapping(mapping_dir)
 
@@ -76,7 +64,6 @@ def score_all_pairs(drug_names, se_names, batch_size=512):
     print(f"  ├─ Matched drugs: {matched_drugs}/{n_drugs}")
     print(f"  ├─ Matched SEs:   {matched_se}/{n_se}")
 
-    # Build valid SE tensor once
     valid_se_ids = [sid for sid, v in zip(se_ids, se_valid) if v]
     valid_se_col_indices = [i for i, v in enumerate(se_valid) if v]
     valid_se_tensor = torch.tensor(valid_se_ids, dtype=torch.long, device=device)
@@ -89,12 +76,11 @@ def score_all_pairs(drug_names, se_names, batch_size=512):
 
             did = drug_ids[drug_idx]
 
-            # Build triples: (drug, has_side_effect, se) for all valid SEs
             h = torch.full((n_valid_se,), did, dtype=torch.long, device=device)
             r = torch.full((n_valid_se,), rel_id, dtype=torch.long, device=device)
             t = valid_se_tensor
 
-            # Score in batches
+            # Score
             drug_scores = []
             for start in range(0, n_valid_se, batch_size):
                 end = min(start + batch_size, n_valid_se)
