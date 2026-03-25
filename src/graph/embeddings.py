@@ -43,7 +43,6 @@ class EmbeddingExtractor:
 
         tf = TriplesFactory.from_labeled_triples(data.values, create_inverse_triples=True)
         self.entity_to_id = tf.entity_to_id
-        self.drug_entities = set(data["subject"].unique())
 
     def extract_embeddings(self):
         with torch.no_grad():
