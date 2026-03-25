@@ -1,0 +1,96 @@
+{
+  "split_info": {
+    "description": "Training: 70% SE triples (N=302556), Evaluation: 20% held-out test (N=87509)",
+    "train_se_associations": 302556,
+    "test_se_pairs": 87509,
+    "full_se_associations": 428103,
+    "train_test_overlap": 0
+  },
+  "hpo": "Optuna (5-fold CV, median pruning)",
+  "paired_ztest_xgb_vs_kge": {
+    "z_stat": 74.31825559981174,
+    "p_value": 0.0,
+    "cohen_d": 0.33737139770353697,
+    "mean_rr_a": 0.3505637446771449,
+    "mean_rr_b": 0.2418511932856212,
+    "n_drugs": 48526
+  },
+  "global_metrics": {
+    "baseline": {
+      "MR": 33.185706613034085,
+      "MRR": 0.22683471650360074,
+      "Hits@1": 0.10452639157115268,
+      "Hits@3": 0.2482487515569827,
+      "Hits@5": 0.35924304928635914,
+      "Hits@10": 0.5095590167868448
+    },
+    "xgboost": {
+      "MR": 6.558902512884389,
+      "MRR": 0.31835149424747344,
+      "Hits@1": 0.11548526437280737,
+      "Hits@3": 0.37926384714715056,
+      "Hits@5": 0.5911849066953113,
+      "Hits@10": 0.8483355997668811
+    },
+    "kge_se": {
+      "MR": 30.272360557199832,
+      "MRR": 0.2255717688895201,
+      "Hits@1": 0.10272086299694888,
+      "Hits@3": 0.2398724702602018,
+      "Hits@5": 0.34784993543521237,
+      "Hits@10": 0.5201179307271252
+    }
+  },
+  "stratified_comparison": [
+    {
+      "Stratum": "Rare (1-50)",
+      "N Labels": 25,
+      "N Test Positives": 205,
+      "Baseline MRR": 0.0038383958008893033,
+      "XGBoost MRR": 0.14303495341813943,
+      "KGE_SE MRR": 0.007520282708504261,
+      "Baseline MR": 260.66829268292685,
+      "XGBoost MR": 22.7609756097561,
+      "KGE_SE MR": 162.7560975609756
+    },
+    {
+      "Stratum": "Uncommon (51-120)",
+      "N Labels": 53,
+      "N Test Positives": 1303,
+      "Baseline MRR": 0.004523440642981716,
+      "XGBoost MRR": 0.22014622961464891,
+      "KGE_SE MRR": 0.008914516760692668,
+      "Baseline MR": 222.0529547198772,
+      "XGBoost MR": 12.185725249424404,
+      "KGE_SE MR": 148.45663852647735
+    },
+    {
+      "Stratum": "Moderate (121-500)",
+      "N Labels": 96,
+      "N Test Positives": 6816,
+      "Baseline MRR": 0.007369309720625513,
+      "XGBoost MRR": 0.2840221278997029,
+      "KGE_SE MRR": 0.012121733310712477,
+      "Baseline MR": 140.52860915492957,
+      "XGBoost MR": 8.9206279342723,
+      "KGE_SE MR": 113.96625586854461
+    },
+    {
+      "Stratum": "Common (>500)",
+      "N Labels": 103,
+      "N Test Positives": 79185,
+      "Baseline MRR": 0.24996109209017903,
+      "XGBoost MRR": 0.32337631348991813,
+      "KGE_SE MRR": 0.24807452063159408,
+      "Baseline MR": 20.249201237608133,
+      "XGBoost MR": 6.22107722422176,
+      "KGE_SE MR": 20.780526614889183
+    }
+  ],
+  "label_distribution": {
+    "Rare (1-50)": 25,
+    "Uncommon (51-120)": 53,
+    "Moderate (121-500)": 96,
+    "Common (>500)": 103
+  }
+}
