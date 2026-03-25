@@ -60,7 +60,6 @@ PARAMS = {
 # ----------------------
 # HPO settings
 # ----------------------
-N_TRIALS = 50
 
 
 def get_rotate_hpo_config(training, testing, validation, device):
@@ -152,7 +151,7 @@ HPO_ROTATE_DIR = MODELS_DIR / "rotate"
 
 MODEL = MODELS_DIR / "learned_kge" / "trained_model.pkl"
 MODEL_SE = MODELS_DIR / "learned_kge_se" / "trained_model.pkl"
-XGB = MODELS_DIR / "xgboost"
+XGB = MODELS_DIR / "xgboost" / "xgboost.pkl"
 
 # UMLS Cache
 UMLS_CACHE_PATH = MODELS_DIR / "umls" / "umls_cache.json"
