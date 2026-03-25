@@ -1,8 +1,6 @@
 import warnings
-
 warnings.filterwarnings("ignore")
 
-from collections import defaultdict
 import json
 
 from patterns import SYNONYMS, antonyms, blocked_groups
@@ -180,21 +178,11 @@ def build_mapping_and_supports(labels, raw_supports):
     nlp = spacy.load("en_core_sci_sm")
     jaccard_matches = _jaccard_merge(umls_unmapped, labels, mapping, raw_supports, nlp)
 
-    final_unmapped = []
     for label in tqdm.tqdm(umls_unmapped, "Jaccard resolution"):
         if label in jaccard_matches:
             mapping[label] = jaccard_matches[label]
         else:
             mapping[label] = label
-            final_unmapped.append((label, umls_scores[label]))
-
-    groups = defaultdict(list)
-    for orig, canonical in mapping.items():
-        groups[canonical].append(orig)
-
-    supports = {}
-    for canonical, originals in groups.items():
-        supports[canonical] = sum(raw_supports.get(orig, 0) for orig in originals)
 
     return mapping
 
