@@ -1,6 +1,6 @@
 outs:
-- md5: 118eac9aeb18db784b27ce42d208badc.dir
-  size: 448367812
+- md5: 823b908a75370f90d973771760dc2e40.dir
+  size: 32467416
   nfiles: 1
   hash: md5
   path: xgboost
