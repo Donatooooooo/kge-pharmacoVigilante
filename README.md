@@ -46,3 +46,5 @@ Drug safety post-marketing surveillance relies on spontaneous reporting systems 
         └── util
             ├── data_loader.py              <- Dataset loader.
             ├── evaluation.py               <- Evaluation methods.
+            ├── kge_scorer.py               <- KGE side effect score.
+            └── __init__.py
