@@ -10,7 +10,7 @@ from src.modeling.util.evaluation import (
     convert_numpy,
     evaluate_ranking_masked,
     evaluate_stratified_masked,
-    paired_ztest_reciprocal_rank,
+    paired_ttest_reciprocal_rank,
     print_metrics,
 )
 from src.modeling.util.kge_scorer import score_all_pairs
@@ -79,7 +79,7 @@ def run():
     print_metrics("Approach A", metrics_kge)
     print_metrics("Approach B", metrics_xgb)
 
-    ztest_result = paired_ztest_reciprocal_rank(y_scores_xgb, y_scores_kge, test_mask)
+    ttest_result = paired_ttest_reciprocal_rank(y_scores_xgb, y_scores_kge, test_mask)
     strat_baseline = evaluate_stratified_masked(y_scores_baseline, test_mask, strata, label_counts)
     strat_xgb = evaluate_stratified_masked(y_scores_xgb, test_mask, strata, label_counts)
     strat_kge = evaluate_stratified_masked(y_scores_kge, test_mask, strata, label_counts)
@@ -116,17 +116,13 @@ def run():
 
     report = convert_numpy({
         "split_info": {
-            "description": (
-                f"Training: 70% SE triples (N={n_train}), "
-                f"Evaluation: 20% held-out test (N={n_test})"
-            ),
             "train_se_associations": n_train,
             "test_se_pairs": n_test,
             "full_se_associations": n_full,
             "train_test_overlap": overlap,
         },
-        "hpo": "Optuna (5-fold CV, median pruning)",
-        "paired_ztest_xgb_vs_kge": ztest_result,
+        "hpo": "5-fold CV",
+        "paired_ttest_xgb_vs_kge": ttest_result,
         "global_metrics": {
             "baseline": metrics_baseline,
             "xgboost": metrics_xgb,

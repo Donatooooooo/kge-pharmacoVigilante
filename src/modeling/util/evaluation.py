@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from scipy.stats import norm
+from scipy.stats import t as t_dist
 
 
 def mean_rank_from_flat(ranks):
@@ -64,8 +64,8 @@ def evaluate_ranking_masked(y_scores, test_mask):
     }
 
 
-def paired_ztest_reciprocal_rank(y_scores_a, y_scores_b, test_mask):
-    """Paired z-test on per-drug mean reciprocal rank between two models."""
+def paired_ttest_reciprocal_rank(y_scores_a, y_scores_b, test_mask):
+    """Paired t-test on per-drug mean reciprocal rank between two models."""
     ranks_a = compute_ranks_masked(y_scores_a, test_mask)
     ranks_b = compute_ranks_masked(y_scores_b, test_mask)
 
@@ -74,16 +74,16 @@ def paired_ztest_reciprocal_rank(y_scores_a, y_scores_b, test_mask):
 
     diff = per_drug_rr_a - per_drug_rr_b
     n = len(diff)
-    z_stat = diff.mean() / (diff.std(ddof=1) / np.sqrt(n))
-    p_value = 2 * (1 - norm.cdf(abs(z_stat)))
+    t_stat = diff.mean() / (diff.std(ddof=1) / np.sqrt(n))
+    p_value = 2 * (1 - t_dist.cdf(abs(t_stat), df=n - 1))
     cohen_d = diff.mean() / diff.std(ddof=1)
 
     return {
-        "z_stat": float(z_stat),
+        "t_stat": float(t_stat),
         "p_value": float(p_value),
         "cohen_d": float(cohen_d),
-        "mean_rr_a": float(per_drug_rr_a.mean()),
-        "mean_rr_b": float(per_drug_rr_b.mean()),
+        "mean_rr_xgb": float(per_drug_rr_a.mean()),
+        "mean_rr_kge": float(per_drug_rr_b.mean()),
         "n_drugs": n,
     }
 
