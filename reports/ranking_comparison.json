@@ -1,18 +1,17 @@
 {
   "split_info": {
-    "description": "Training: 70% SE triples (N=302556), Evaluation: 20% held-out test (N=87509)",
     "train_se_associations": 302556,
     "test_se_pairs": 87509,
     "full_se_associations": 428103,
     "train_test_overlap": 0
   },
-  "hpo": "Optuna (5-fold CV, median pruning)",
-  "paired_ztest_xgb_vs_kge": {
-    "z_stat": 74.31825559981174,
+  "hpo": "5-fold CV",
+  "paired_ttest_xgb_vs_kge": {
+    "t_stat": 74.31825559981174,
     "p_value": 0.0,
     "cohen_d": 0.33737139770353697,
-    "mean_rr_a": 0.3505637446771449,
-    "mean_rr_b": 0.2418511932856212,
+    "mean_rr_xgb": 0.3505637446771449,
+    "mean_rr_kge": 0.2418511932856212,
     "n_drugs": 48526
   },
   "global_metrics": {
